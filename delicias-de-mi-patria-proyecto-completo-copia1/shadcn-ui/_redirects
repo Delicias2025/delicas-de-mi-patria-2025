@@ -1,0 +1,8 @@
+# Netlify redirects file for SPA (Single Page Application)
+/*    /index.html   200
+
+# API redirects if needed
+/api/*  https://your-backend-api.com/api/:splat  200
+
+# Force HTTPS
+http://deliciasdempatria.netlify.app/*    https://deliciasdempatria.netlify.app/:splat    301!

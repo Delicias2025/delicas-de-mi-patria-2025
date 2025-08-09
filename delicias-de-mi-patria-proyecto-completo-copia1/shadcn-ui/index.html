@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>Delicias de mi Patria - Productos Auténticos Centroamericanos Online</title>
+  <meta name="description" content="Compra productos auténticos centroamericanos, comida tradicional e ingredientes culturales. Envío rápido, calidad garantizada. Descubre los sabores de tu patria." />
+  <meta name="keywords" content="productos centroamericanos, comida tradicional, ingredientes auténticos, productos latinos, tienda online, delicias patria" />
+  <meta name="author" content="Delicias de mi Patria" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://deliciasdempatria.com" />
+
+  <!-- Open Graph tags -->
+  <meta property="og:title" content="Delicias de mi Patria - Productos Auténticos Centroamericanos" />
+  <meta property="og:description" content="Compra productos auténticos centroamericanos online. Comida tradicional, ingredientes culturales y más." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deliciasdempatria.com" />
+  <meta property="og:image" content="/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Delicias de mi Patria" />
+  <meta property="og:locale" content="es_ES" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Delicias de mi Patria - Productos Auténticos Centroamericanos" />
+  <meta name="twitter:description" content="Compra productos auténticos centroamericanos online. Comida tradicional y más." />
+  <meta name="twitter:image" content="/images/twitter-image.jpg" />
+  <meta name="twitter:site" content="@deliciaspatria" />
+
+  <!-- Additional SEO tags -->
+  <meta name="theme-color" content="#16a34a" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Structured Data Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Delicias de mi Patria",
+    "description": "Tienda online de productos auténticos centroamericanos",
+    "url": "https://deliciasdempatria.com",
+    "logo": "/images/logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    },
+    "openingHours": "Mo-Su 00:00-23:59",
+    "paymentAccepted": ["Credit Card", "PayPal", "Stripe"],
+    "currenciesAccepted": "USD",
+    "priceRange": "$",
+    "sameAs": [
+      "https://facebook.com/deliciasdempatria",
+      "https://instagram.com/deliciasdempatria"
+    ]
+  }
+  </script>
+
+</head>
+</to_replace>
+</Editor.edit_file_by_replace>
+
+**2. Create a SEO utility component for dynamic meta tags:**
+
+<Editor.write>
+<path>
+src/components/seo/SEOHead.tsx
+</path>
+<content>
+import { Helmet } from 'react-helmet-async';
+
+interface SEOHeadProps {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  url?: string;
+  type?: string;
+  product?: {
+    name: string;
+    price: number;
+    currency: string;
+    availability: string;
+    category: string;
+    brand?: string;
+    sku?: string;
+    rating?: number;
+    reviewCount?: number;
+  };
+}
+
+export const SEOHead = ({ 
+  title, 
+  description, 
+  keywords, 
+  image, 
+  url, 
+  type = 'website',
+  product 
+}: SEOHeadProps) => {
+  const defaultTitle = "Delicias de mi Patria - Productos Auténticos Centroamericanos";
+  const defaultDescription = "Compra productos auténticos centroamericanos, comida tradicional e ingredientes culturales. Envío rápido, calidad garantizada.";
+  const defaultImage = "/images/og-image.jpg";
+  const defaultUrl = "https://deliciasdempatria.com";
+
+  const fullTitle = title ? `${title} | Delicias de mi Patria` : defaultTitle;
+  const fullDescription = description || defaultDescription;
+  const fullImage = image || defaultImage;
+  const fullUrl = url || defaultUrl;
+
+  // Generate product schema if product data is provided
+  const productSchema = product ? {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "description": fullDescription,
+    "image": fullImage,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand || "Delicias de mi Patria"
+    },
+    "category": product.category,
+    "sku": product.sku,
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": product.currency,
+      "availability": `https://schema.org/${product.availability}`,
+      "seller": {
+        "@type": "Organization",
+        "name": "Delicias de mi Patria"
+      }
+    },
+    ...(product.rating && product.reviewCount && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": product.rating,
+        "reviewCount": product.reviewCount,
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    })
+  } : null;
+
+  return (
+    <Helmet>
+      {/* Basic Meta Tags */}
+      <title>{fullTitle}</title>
+      <meta name="description" content={fullDescription} />
+      {keywords && <meta name="keywords" content={keywords} />}
+      <link rel="canonical" href={fullUrl} />
+
+      {/* Open Graph */}
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={fullDescription} />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:image" content={fullImage} />
+      <meta property="og:site_name" content="Delicias de mi Patria" />
+
+      {/* Twitter Cards */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={fullDescription} />
+      <meta name="twitter:image" content={fullImage} />
+
+      {/* Product Schema */}
+      {productSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(productSchema)}
+        </script>
+      )}
+    </Helmet>
+  );
+};
+</content>
+</Editor.write>
+
+**3. Create a comprehensive Supabase service for products:**
+
+<Editor.write>
+<path>
+src/lib/supabase-products-service.ts
+</path>
+<content>
+import { supabase } from './supabase-config';
+import { Product, ProductFormData } from '../types';
+
+export interface SupabaseProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image_urls: string[];
+  stock_quantity: number;
+  featured: boolean;
+  active: boolean;
+  metadata: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+class SupabaseProductsService {
+  // Convert Supabase product to app product format
+  private mapSupabaseProduct(supaProduct: SupabaseProduct): Product {
+    return {
+      id: supaProduct.id,
+      name: supaProduct.name,
+      description: supaProduct.description,
+      price: supaProduct.price,
+      category: supaProduct.category,
+      image: supaProduct.image_urls[0] || '/placeholder-product.jpg',
+      images: supaProduct.image_urls,
+      stock: supaProduct.stock_quantity,
+      featured: supaProduct.featured,
+      rating: supaProduct.metadata?.rating || 0,
+      reviewCount: supaProduct.metadata?.reviewCount || 0,
+      tags: supaProduct.metadata?.tags || [],
+      brand: supaProduct.metadata?.brand || 'Delicias de mi Patria',
+      sku: supaProduct.metadata?.sku || supaProduct.id,
+      weight: supaProduct.metadata?.weight,
+      dimensions: supaProduct.metadata?.dimensions,
+      origin: supaProduct.metadata?.origin
+    };
+  }
+
+  // Get all products with real-time subscription
+  async getProducts(): Promise<Product[]> {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching products:', error);
+        // Fallback to localStorage
+        return this.getFallbackProducts();
+      }
+
+      return data?.map(this.mapSupabaseProduct) || [];
+    } catch (error) {
+      console.error('Network error fetching products:', error);
+      return this.getFallbackProducts();
+    }
+  }
+
+  // Get products by category
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category)
+        .eq('active', true)
+        .order('featured', { ascending: false });
+
+      if (error) throw error;
+      return data?.map(this.mapSupabaseProduct) || [];
+    } catch (error) {
+      console.error('Error fetching products by category:', error);
+      return this.getFallbackProductsByCategory(category);
+    }
+  }
+
+  // Get single product by ID
+  async getProductById(id: string): Promise<Product | null> {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .eq('active', true)
+        .single();
+
+      if (error) throw error;
+      return data ? this.mapSupabaseProduct(data) : null;
+    } catch (error) {
+      console.error('Error fetching product by ID:', error);
+      return this.getFallbackProductById(id);
+    }
+  }
+
+  // Add new product
+  async addProduct(productData: ProductFormData): Promise<Product | null> {
+    try {
+      const supabaseProduct: Partial<SupabaseProduct> = {
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        category: productData.category,
+        image_urls: productData.images || [productData.image],
+        stock_quantity: productData.stock || 0,
+        featured: productData.featured || false,
+        active: true,
+        metadata: {
+          rating: 0,
+          reviewCount: 0,
+          tags: productData.tags || [],
+          brand: productData.brand || 'Delicias de mi Patria',
+          weight: productData.weight,
+          dimensions: productData.dimensions,
+          origin: productData.origin
+        }
+      };
+
+      const { data, error } = await supabase
+        .from('products')
+        .insert(supabaseProduct)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      const newProduct = this.mapSupabaseProduct(data);
+      
+      // Update localStorage as backup
+      this.updateLocalStorageProducts(newProduct, 'add');
+      
+      return newProduct;
+    } catch (error) {
+      console.error('Error adding product:', error);
+      return this.addFallbackProduct(productData);
+    }
+  }
+
+  // Update product
+  async updateProduct(id: string, productData: Partial<ProductFormData>): Promise<Product | null> {
+    try {
+      const updateData: Partial<SupabaseProduct> = {
+        ...(productData.name && { name: productData.name }),
+        ...(productData.description && { description: productData.description }),
+        ...(productData.price !== undefined && { price: productData.price }),
+        ...(productData.category && { category: productData.category }),
+        ...(productData.images && { image_urls: productData.images }),
+        ...(productData.stock !== undefined && { stock_quantity: productData.stock }),
+        ...(productData.featured !== undefined && { featured: productData.featured }),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('products')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      const updatedProduct = this.mapSupabaseProduct(data);
+      this.updateLocalStorageProducts(updatedProduct, 'update');
+      
+      return updatedProduct;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      return this.updateFallbackProduct(id, productData);
+    }
+  }
+
+  // Delete product
+  async deleteProduct(id: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ active: false })
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      this.updateLocalStorageProducts({ id } as Product, 'delete');
+      return true;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      return this.deleteFallbackProduct(id);
+    }
+  }
+
+  // Subscribe to real-time product changes
+  subscribeToProducts(callback: (products: Product[]) => void) {
+    const channel = supabase
+      .channel('products_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        async (payload) => {
+          console.log('Real-time product change:', payload);
+          const products = await this.getProducts();
+          callback(products);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }
+
+  // Fallback methods using localStorage
+  private getFallbackProducts(): Product[] {
+    try {
+      const stored = localStorage.getItem('products');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private getFallbackProductsByCategory(category: string): Product[] {
+    const products = this.getFallbackProducts();
+    return products.filter(p => p.category === category);
+  }
+
+  private getFallbackProductById(id: string): Product | null {
+    const products = this.getFallbackProducts();
+    return products.find(p => p.id === id) || null;
+  }
+
+  private addFallbackProduct(productData: ProductFormData): Product | null {
+    try {
+      const newProduct: Product = {
+        id: Date.now().toString(),
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        category: productData.category,
+        image: productData.image,
+        images: productData.images || [productData.image],
+        stock: productData.stock || 0,
+        featured: productData.featured || false,
+        rating: 0,
+        reviewCount: 0,
+        tags: productData.tags || [],
+        brand: productData.brand || 'Delicias de mi Patria',
+        sku: Date.now().toString(),
+        weight: productData.weight,
+        dimensions: productData.dimensions,
+        origin: productData.origin
+      };
+
+      this.updateLocalStorageProducts(newProduct, 'add');
+      return newProduct;
+    } catch {
+      return null;
+    }
+  }
+
+  private updateFallbackProduct(id: string, productData: Partial<ProductFormData>): Product | null {
+    try {
+      const products = this.getFallbackProducts();
+      const index = products.findIndex(p => p.id === id);
+      if (index === -1) return null;
+
+      const updatedProduct = { ...products[index], ...productData };
+      products[index] = updatedProduct;
+      localStorage.setItem('products', JSON.stringify(products));
+      return updatedProduct;
+    } catch {
+      return null;
+    }
+  }
+
+  private deleteFallbackProduct(id: string): boolean {
+    try {
+      const products = this.getFallbackProducts();
+      const filtered = products.filter(p => p.id !== id);
+      localStorage.setItem('products', JSON.stringify(filtered));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private updateLocalStorageProducts(product: Product, operation: 'add' | 'update' | 'delete') {
+    try {
+      const products = this.getFallbackProducts();
+      
+      switch (operation) {
+        case 'add':
+          products.push(product);
+          break;
+        case 'update':
+          const updateIndex = products.findIndex(p => p.id === product.id);
+          if (updateIndex !== -1) {
+            products[updateIndex] = product;
+          }
+          break;
+        case 'delete':
+          const filtered = products.filter(p => p.id !== product.id);
+          localStorage.setItem('products', JSON.stringify(filtered));
+          return;
+      }
+      
+      localStorage.setItem('products', JSON.stringify(products));
+    } catch (error) {
+      console.error('Error updating localStorage:', error);
+    }
+  }
+}
+
+export const supabaseProductsService = new SupabaseProductsService();
+</content>
+</Editor.write>
+
+**4. Create a sitemap generation utility:**
+
+<Editor.write>
+<path>
+src/lib/sitemap-generator.ts
+</path>
+<content>
+import { supabaseProductsService } from './supabase-products-service';
+
+interface SitemapUrl {
+  loc: string;
+  lastmod?: string;
+  changefreq?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  priority?: number;
+}
+
+class SitemapGenerator {
+  private baseUrl = 'https://deliciasdempatria.com';
+
+  // Generate static routes
+  private getStaticRoutes(): SitemapUrl[] {
+    return [
+      {
+        loc: this.baseUrl,
+        changefreq: 'weekly',
+        priority: 1.0
+      },
+      {
+        loc: `${this.baseUrl}/productos`,
+        changefreq: 'daily',
+        priority: 0.9
+      },
+      {
+        loc: `${this.baseUrl}/categorias/todos`,
+        changefreq: 'daily',
+        priority: 0.8
+      },
+      {
+        loc: `${this.baseUrl}/nosotros`,
+        changefreq: 'monthly',
+        priority: 0.6
+      },
+      {
+        loc: `${this.baseUrl}/contacto`,
+        changefreq: 'monthly',
+        priority: 0.6
+      },
+      {
+        loc: `${this.baseUrl}/politicas`,
+        changefreq: 'yearly',
+        priority: 0.3
+      },
+      {
+        loc: `${this.baseUrl}/politicas-privacidad`,
+        changefreq: 'yearly',
+        priority: 0.3
+      },
+      {
+        loc: `${this.baseUrl}/politicas-envio`,
+        changefreq: 'monthly',
+        priority: 0.4
+      }
+    ];
+  }
+
+  // Generate category routes
+  private getCategoryRoutes(): SitemapUrl[] {
+    const categories = [
+      'bebidas-tradicionales',
+      'dulces-tipicos',
+      'comida-casera',
+      'especias-condimentos',
+      'productos-organicos',
+      'artesanias'
+    ];
+
+    return categories.map(category => ({
+      loc: `${this.baseUrl}/categorias/${category}`,
+      changefreq: 'weekly' as const,
+      priority: 0.7
+    }));
+  }
+
+  // Generate product routes
+  private async getProductRoutes(): Promise<SitemapUrl[]> {
+    try {
+      const products = await supabaseProductsService.getProducts();
+      
+      return products.map(product => ({
+        loc: `${this.baseUrl}/producto/${product.id}`,
+        lastmod: new Date().toISOString().split('T')[0],
+        changefreq: 'weekly' as const,
+        priority: 0.8
+      }));
+    } catch (error) {
+      console.error('Error generating product routes for sitemap:', error);
+      return [];
+    }
+  }
+
+  // Generate complete sitemap XML
+  async generateSitemap(): Promise<string> {
+    const staticRoutes = this.getStaticRoutes();
+    const categoryRoutes = this.getCategoryRoutes();
+    const productRoutes = await this.getProductRoutes();
+    
+    const allRoutes = [...staticRoutes, ...categoryRoutes, ...productRoutes];
+    
+    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${allRoutes.map(route => `  <url>
+    <loc>${route.loc}</loc>
+    ${route.lastmod ? `<lastmod>${route.lastmod}</lastmod>` : ''}
+    ${route.changefreq ? `<changefreq>${route.changefreq}</changefreq>` : ''}
+    ${route.priority ? `<priority>${route.priority}</priority>` : ''}
+  </url>`).join('\n')}
+</urlset>`;
+
+    return sitemapXml;
+  }
+
+  // Generate robots.txt content
+  generateRobotsTxt(): string {
+    return `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /carrito/
+Disallow: /checkout/
+Disallow: /pedidos/
+
+Sitemap: ${this.baseUrl}/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1`;
+  }
+
+  // Save sitemap to public directory (for development)
+  async saveSitemap(): Promise<void> {
+    try {
+      const sitemapContent = await this.generateSitemap();
+      const robotsContent = this.generateRobotsTxt();
+
+      // In a real application, you would save these files to the public directory
+      // For now, we'll log them or make them available for download
+      console.log('Generated sitemap.xml:', sitemapContent);
+      console.log('Generated robots.txt:', robotsContent);
+      
+      // You can also trigger a download or save to localStorage for development
+      localStorage.setItem('generated_sitemap', sitemapContent);
+      localStorage.setItem('generated_robots', robotsContent);
+    } catch (error) {
+      console.error('Error saving sitemap:', error);
+    }
+  }
+}
+
+export const sitemapGenerator = new SitemapGenerator();
+</content>
+</Editor.write>
+
+**5. Update the App.tsx to include SEO provider:**
+
+<Editor.edit_file_by_replace>
+<file_name>
+src/App.tsx
+</file_name>
+<to_replace>
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';</to_replace>
+<new_content>
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "Delicias de mi Patria",
+  "short_name": "Delicias Patria",
+  "description": "Tienda online de productos auténticos centroamericanos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "shopping"],
+  "lang": "es"
+}
